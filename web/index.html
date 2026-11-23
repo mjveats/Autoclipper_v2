@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auto Clipper v2.0 • Studio Workstation</title>
+
+  <!-- Precompiled Local CSS (Instant Zero-Latency Render, zero runtime JIT delay) -->
+  <link rel="stylesheet" href="tailwind.min.css" />
+
+  <!-- Non-blocking Google Fonts with instant native fallback -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet" /></noscript>
+</head>
+<body class="bg-obsidian text-gray-100 min-h-screen lg:h-screen lg:overflow-hidden flex flex-col overflow-x-hidden selection:bg-amber-500/30 selection:text-amber-200">
+
+  <!-- ===================================================================== -->
+  <!-- 1. UNIFIED TOP HEADER (56px Height)                                   -->
+  <!-- ===================================================================== -->
+  <header class="h-14 shrink-0 bg-panel border-b border-hairline px-4 lg:px-5 flex items-center justify-between gap-3 z-30">
+    <!-- Left Identity & Community Shield -->
+    <div class="flex items-center gap-3 min-w-0">
+      <!-- Studio Brand Mark -->
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400/20 to-amber-600/10 border border-amber-500/30 flex items-center justify-center shrink-0">
+        <svg class="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="6" cy="6" r="3"></circle>
+          <circle cx="6" cy="18" r="3"></circle>
+          <line x1="20" y1="4" x2="8.12" y2="15.88"></line>
+          <line x1="14.47" y1="14.48" x2="20" y2="20"></line>
+          <line x1="8.12" y1="8.12" x2="12" y2="12"></line>
+        </svg>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <h1 class="text-sm sm:text-base font-semibold tracking-tight text-gray-100">Auto Clipper</h1>
+        <span class="px-1.5 py-0.5 text-[11px] font-mono font-medium rounded-md bg-surface text-amber-300 border border-hairline">
+          v2.0
+        </span>
+      </div>
+
+      <!-- Divider -->
+      <div class="hidden md:block h-4 w-px bg-hairline shrink-0"></div>
+
+      <!-- Shield Badge -->
+      <div class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs truncate">
+        <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          <polyline points="9 12 11 14 15 10"></polyline>
+        </svg>
+        <span class="truncate font-medium">Official Free Tool • By MJ Mark Jonel (Not for Resale)</span>
+      </div>
+    </div>
+
+    <!-- Right Utility Actions -->
+    <div class="flex items-center gap-2 shrink-0">
+      <button
+        id="btn-output-folder"
+        type="button"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface hover:bg-elevated text-gray-300 hover:text-white border border-hairline hover:border-hairlineHover text-xs font-medium transition-colors cursor-pointer"
+        title="Open local export directory"
+      >
+        <svg class="w-3.5 h-3.5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+        </svg>
+        <span>Output Folder</span>
+      </button>
+
+      <button
+        id="btn-results-studio"
+        type="button"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface hover:bg-elevated text-gray-100 border border-hairline hover:border-amber-500/40 text-xs font-medium transition-colors cursor-pointer"
+      >
+        <svg class="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+          <line x1="7" y1="2" x2="7" y2="22"></line>
+          <line x1="17" y1="2" x2="17" y2="22"></line>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+        </svg>
+        <span>Results Studio</span>
+        <span id="results-count-badge" class="ml-0.5 px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-amber-500/15 text-amber-300 border border-amber-500/25">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===================================================================== -->
+  <!-- 2. THREE-COLUMN DESKTOP STUDIO WORKSPACE                              -->
+  <!-- ===================================================================== -->
+  <main class="flex-1 lg:h-[calc(100vh-56px)] flex flex-col lg:flex-row gap-3 p-3 overflow-y-auto lg:overflow-hidden">
+
+    <!-- =================================================================== -->
+    <!-- LEFT COLUMN (36% Width — Configuration)                             -->
+    <!-- =================================================================== -->
+    <section class="w-full lg:w-[36%] flex flex-col gap-3 lg:h-full lg:overflow-y-auto studio-scroll pr-0 lg:pr-0.5">
+
+      <!-- SECTION 1: VIDEO SOURCE -->
+      <div class="bg-panel border border-hairline rounded-xl p-3.5 shrink-0">
+        <div class="flex items-center justify-between mb-2.5">
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+            <h2 class="text-xs font-semibold uppercase tracking-wider text-gray-300">Video Source</h2>
+          </div>
+          <span id="source-type-label" class="text-[11px] font-mono text-gray-500">YouTube / Twitch URL</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div class="relative flex-1 min-w-0">
+            <div class="absolute inset-y-0 left-2.5 flex items-center pointer-events-none text-gray-500">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+              </svg>
+            </div>
+            <input
+              id="video-source-input"
+              type="text"
+              placeholder="Paste YouTube / Twitch URL..."
+              class="w-full bg-obsidian border border-hairline focus:border-amber-500/60 focus:outline-none rounded-lg pl-8 pr-7 py-2 text-xs font-mono text-gray-200 placeholder-gray-600 transition-colors"
+            />
+            <button
+              id="btn-reset-url"
+              type="button"
+              title="Clear input"
+              class="hidden absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-300 cursor-pointer"
+            >
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
+          <button
+            id="btn-browse-file"
+            type="button"
+            class="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-surface hover:bg-elevated text-gray-200 border border-hairline hover:border-hairlineHover text-xs font-medium transition-colors cursor-pointer"
+          >
+            <svg class="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <span>Browse File</span>
+          </button>
+        </div>
+        <p class="mt-1.5 text-[11px] text-gray-500">Supports YouTube, Twitch VODs, or local MP4, MKV, MOV, WEBM files.</p>
+      </div>
+
+      <!-- SECTION 2: CLIP & AI ENGINE -->
+      <div class="bg-panel border border-hairline rounded-xl p-3.5 flex flex-col gap-3 shrink-0">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+            <h2 class="text-xs font-semibold uppercase tracking-wider text-gray-300">Clip &amp; AI Engine</h2>
+          </div>
+          <span class="text-[11px] font-mono text-emerald-400/90">Local Engine Ready</span>
+        </div>
+
+        <!-- Clean 2x2 Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <!-- Niche Preset -->
+          <div>
+            <label for="select-niche" class="block text-[11px] font-medium text-gray-400 mb-1">Niche Preset</label>
+            <select
+              id="select-niche"
+              class="studio-select w-full bg-obsidian border border-hairline hover:border-hairlineHover focus:border-amber-500/60 focus:outline-none rounded-lg px-2.5 py-1.5 text-xs text-gray-200 transition-colors cursor-pointer"
+            >
+              <option value="gaming" selected>Gaming</option>
+              <option value="streaming">Streaming</option>
+              <option value="podcast">Podcast / Debate</option>
+              <option value="interviews">Interviews</option>
+              <option value="finance_crypto">Finance &amp; Crypto</option>
+              <option value="motivation">Motivation</option>
+              <option value="education_tech">Education / Tech</option>
+              <option value="entertainment">Entertainment</option>
+              <option value="irl">IRL / Vlog</option>
+              <option value="music">Music</option>
+            </select>
+          </div>
+
+          <!-- Aspect Ratio Segmented Toggle -->
+          <div>
+            <span class="block text-[11px] font-medium text-gray-400 mb-1">Aspect Ratio</span>
+            <div id="aspect-ratio-group" class="grid grid-cols-3 bg-obsidian p-0.5 rounded-lg border border-hairline">
+              <button
+                type="button"
+                data-aspect="9:16"
+                class="aspect-btn py-1 rounded-md text-xs font-medium bg-surface text-amber-300 border border-hairlineHover transition-all cursor-pointer"
+              >
+                9:16
+              </button>
+              <button
+                type="button"
+                data-aspect="1:1"
+                class="aspect-btn py-1 rounded-md text-xs font-medium text-gray-400 hover:text-gray-200 border border-transparent transition-all cursor-pointer"
+              >
+                1:1
+              </button>
+              <button
+                type="button"
+                data-aspect="16:9"
+                class="aspect-btn py-1 rounded-md text-xs font-medium text-gray-400 hover:text-gray-200 border border-transparent transition-all cursor-pointer"
+              >
+                16:9
+              </button>
+            </div>
+          </div>
+
+          <!-- Framing Layout -->
+          <div>
+            <label for="select-framing" class="block text-[11px] font-medium text-gray-400 mb-1">Framing Layout</label>
+            <select
+              id="select-framing"
+              class="studio-select w-full bg-obsidian border border-hairline hover:border-hairlineHover focus:border-amber-500/60 focus:outline-none rounded-lg px-2.5 py-1.5 text-xs text-gray-200 transition-colors cursor-pointer"
+            >
+              <option value="auto" selected>Smart Auto-Detect</option>
+              <option value="split">Facecam Top / Game Bottom</option>
+              <option value="fill">Fullscreen Crop (Fill)</option>
+              <option value="fit">Fit (Letterbox / Clean)</option>
+            </select>
+          </div>
+
+          <!-- Clip Limit -->
+          <div>
+            <label for="select-clip-limit" class="block text-[11px] font-medium text-gray-400 mb-1">Clip Limit</label>
+            <select
+              id="select-clip-limit"
+              class="studio-select w-full bg-obsidian border border-hairline hover:border-hairlineHover focus:border-amber-500/60 focus:outline-none rounded-lg px-2.5 py-1.5 text-xs text-gray-200 transition-colors cursor-pointer"
+            >
+              <option value="3 (Fastest - ~2 mins)">3 Clips (~2 mins)</option>
+              <option value="5 (Recommended - ~4 mins)" selected>5 Clips • ~4 mins</option>
+              <option value="10">10 Clips</option>
+              <option value="All detected clips">All detected clips</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Preset Summary Strip -->
+        <div class="flex items-center gap-2 px-2.5 py-2 rounded-lg bg-obsidian/90 border border-hairline text-[11px] text-gray-300">
+          <svg class="w-3.5 h-3.5 text-amber-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+          <span id="preset-summary-text" class="truncate font-mono text-[11px] text-gray-300">
+            Gaming • 9:16 Split • 30s+ Complete play with buildup, tension, and funny freakout
+          </span>
+        </div>
+
+        <!-- AI Model Selection (inline cards, 2-col grid) -->
+        <div>
+          <span class="block text-[11px] font-medium text-gray-400 mb-2">AI Model &amp; Hardware</span>
+          <div class="grid grid-cols-2 gap-2" id="model-cards-grid">
+            <!-- qwen2.5:1.5b -->
+            <div
+              class="model-card selected bg-obsidian border border-hairline rounded-xl p-2.5"
+              data-model="qwen2.5:1.5b"
+            >
+              <div class="text-xs font-semibold text-gray-100 mb-0.5">qwen2.5:1.5b</div>
+              <div class="text-[10px] text-gray-400 leading-snug mb-1">Quickest thinking, basic reasoning</div>
+              <div class="text-[9px] font-mono text-gray-500">No GPU · 4-8GB RAM</div>
+            </div>
+            <!-- qwen2.5:3b -->
+            <div
+              class="model-card bg-obsidian border border-hairline rounded-xl p-2.5"
+              data-model="qwen2.5:3b"
+            >
+              <div class="text-xs font-semibold text-gray-100 mb-0.5">qwen2.5:3b</div>
+              <div class="text-[10px] text-gray-400 leading-snug mb-1">Light thinking, good for simple clips</div>
+              <div class="text-[9px] font-mono text-gray-500">4GB VRAM · 8GB RAM</div>
+            </div>
+            <!-- qwen2.5:7b -->
+            <div
+              class="model-card bg-obsidian border border-hairline rounded-xl p-2.5"
+              data-model="qwen2.5:7b"
+            >
+              <div class="text-xs font-semibold text-gray-100 mb-0.5">qwen2.5:7b</div>
+              <div class="text-[10px] text-gray-400 leading-snug mb-1">Balanced thinking, recommended</div>
+              <div class="text-[9px] font-mono text-gray-500">6-8GB VRAM · 16GB RAM</div>
+            </div>
+            <!-- qwen2.5:14b -->
+            <div
+              class="model-card bg-obsidian border border-hairline rounded-xl p-2.5"
+              data-model="qwen2.5:14b"
+            >
+              <div class="text-xs font-semibold text-gray-100 mb-0.5">qwen2.5:14b</div>
+              <div class="text-[10px] text-gray-400 leading-snug mb-1">Deep thinking, best quality</div>
+              <div class="text-[9px] font-mono text-gray-500">12+GB VRAM · 32GB RAM</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Advanced Fields (always visible, compact 2-col) -->
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label for="select-facecam" class="block text-[11px] font-medium text-gray-400 mb-1">Facecam Pos</label>
+            <select
+              id="select-facecam"
+              class="studio-select w-full bg-obsidian border border-hairline hover:border-hairlineHover focus:border-amber-500/60 focus:outline-none rounded-lg px-2 py-1.5 text-xs text-gray-200 transition-colors cursor-pointer"
+            >
+              <option value="top" selected>Top</option>
+              <option value="bottom">Bottom</option>
+              <option value="pip-tr">PIP Top-Right</option>
+              <option value="pip-tl">PIP Top-Left</option>
+              <option value="pip-br">PIP Bottom-Right</option>
+              <option value="pip-bl">PIP Bottom-Left</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="select-buffer" class="block text-[11px] font-medium text-gray-400 mb-1">Stream Buffer</label>
+            <select
+              id="select-buffer"
+              class="studio-select w-full bg-obsidian border border-hairline hover:border-hairlineHover focus:border-amber-500/60 focus:outline-none rounded-lg px-2 py-1.5 text-xs text-gray-200 transition-colors cursor-pointer"
+            >
+              <option value="0" selected>Off (Full VOD)</option>
+              <option value="15">Last 15 mins</option>
+              <option value="30">Last 30 mins</option>
+              <option value="60">Last 60 mins</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="select-cookies" class="block text-[11px] font-medium text-gray-400 mb-1">Cookies</label>
+            <select
+              id="select-cookies"
+              class="studio-select w-full bg-obsidian border border-hairline hover:border-hairlineHover focus:border-amber-500/60 focus:outline-none rounded-lg px-2 py-1.5 text-xs text-gray-200 transition-colors cursor-pointer"
+            >
+              <option value="" selected>None</option>
+              <option value="chrome">Chrome</option>
+              <option value="edge">Edge</option>
+              <option value="firefox">Firefox</option>
+            </select>
+          </div>
+
+          <div class="col-span-2 mt-0.5">
+            <label for="input-focus-topic" class="block text-[11px] font-medium text-gray-400 mb-1">Focus Topic / Time Range (Optional)</label>
+            <input
+              id="input-focus-topic"
+              type="text"
+              placeholder='e.g. "funniest moments" | "1:20:00 to 1:45:30"'
+              class="w-full bg-obsidian border border-hairline focus:border-amber-500/60 focus:outline-none rounded-lg px-2.5 py-1.5 text-xs text-gray-200 placeholder-gray-600 transition-colors"
+            />
+          </div>
+        </div>
+
+        <!-- Switches — Modern 2-col toggle cards -->
+        <div class="grid grid-cols-2 gap-2">
+          <!-- Toggle 1: Captions -->
+          <label class="toggle-card">
+            <div class="flex items-center gap-2 min-w-0">
+              <!-- speech bubble icon -->
+              <svg class="w-3.5 h-3.5 text-amber-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+              <span class="text-xs text-gray-300 truncate">Captions</span>
+            </div>
+            <input id="toggle-captions" type="checkbox" checked class="sr-only peer" />
+            <div class="shrink-0 w-10 h-5 bg-obsidian border-2 border-hairline peer-checked:bg-amber-500/25 peer-checked:border-amber-500/60 rounded-full relative transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:w-4 after:h-4 after:rounded-full after:bg-gray-500 peer-checked:after:bg-amber-400 peer-checked:after:translate-x-5 after:transition-all ring-1 ring-hairlineHover"></div>
+          </label>
+
+          <!-- Toggle 2: 3s Hook Banner -->
+          <label class="toggle-card">
+            <div class="flex items-center gap-2 min-w-0">
+              <!-- lightning bolt icon -->
+              <svg class="w-3.5 h-3.5 text-amber-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+              <span class="text-xs text-gray-300 truncate">3s Hook</span>
+            </div>
+            <input id="toggle-hook" type="checkbox" checked class="sr-only peer" />
+            <div class="shrink-0 w-10 h-5 bg-obsidian border-2 border-hairline peer-checked:bg-amber-500/25 peer-checked:border-amber-500/60 rounded-full relative transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:w-4 after:h-4 after:rounded-full after:bg-gray-500 peer-checked:after:bg-amber-400 peer-checked:after:translate-x-5 after:transition-all ring-1 ring-hairlineHover"></div>
+          </label>
+
+          <!-- Toggle 3: Cut Dead Air & Zoom -->
+          <label class="toggle-card">
+            <div class="flex items-center gap-2 min-w-0">
+              <!-- scissors icon -->
+              <svg class="w-3.5 h-3.5 text-amber-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="6" cy="6" r="3"></circle>
+                <circle cx="6" cy="18" r="3"></circle>
+                <line x1="20" y1="4" x2="8.12" y2="15.88"></line>
+                <line x1="14.47" y1="14.48" x2="20" y2="20"></line>
+                <line x1="8.12" y1="8.12" x2="12" y2="12"></line>
+              </svg>
+              <span class="text-xs text-gray-300 truncate">Cut Dead Air</span>
+            </div>
+            <input id="toggle-deadair" type="checkbox" checked class="sr-only peer" />
+            <div class="shrink-0 w-10 h-5 bg-obsidian border-2 border-hairline peer-checked:bg-amber-500/25 peer-checked:border-amber-500/60 rounded-full relative transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:w-4 after:h-4 after:rounded-full after:bg-gray-500 peer-checked:after:bg-amber-400 peer-checked:after:translate-x-5 after:transition-all ring-1 ring-hairlineHover"></div>
+          </label>
+
+          <!-- Toggle 4: Bleep Profanity -->
+          <label class="toggle-card">
+            <div class="flex items-center gap-2 min-w-0">
+              <!-- volume-x icon -->
+              <svg class="w-3.5 h-3.5 text-amber-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <line x1="23" y1="9" x2="17" y2="15"></line>
+                <line x1="17" y1="9" x2="23" y2="15"></line>
+              </svg>
+              <span class="text-xs text-gray-300 truncate">Bleep Profanity</span>
+            </div>
+            <input id="toggle-bleep" type="checkbox" checked class="sr-only peer" />
+            <div class="shrink-0 w-10 h-5 bg-obsidian border-2 border-hairline peer-checked:bg-amber-500/25 peer-checked:border-amber-500/60 rounded-full relative transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:w-4 after:h-4 after:rounded-full after:bg-gray-500 peer-checked:after:bg-amber-400 peer-checked:after:translate-x-5 after:transition-all ring-1 ring-hairlineHover"></div>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- CENTER COLUMN (30% Width — Live Safe-Zone Stage)                    -->
+    <!-- =================================================================== -->
+    <section class="w-full lg:w-[30%] bg-panel border border-hairline rounded-xl p-3.5 flex flex-col justify-between gap-3 lg:h-full overflow-hidden">
+      <!-- Stage Header -->
+      <div class="flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <h2 class="text-xs font-semibold uppercase tracking-wider text-gray-300">Live Caption &amp; Framing Preview</h2>
+        </div>
+
+        <button
+          id="btn-replay-motion"
+          type="button"
+          class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-surface hover:bg-elevated text-gray-300 hover:text-amber-300 border border-hairline hover:border-hairlineHover text-[11px] font-medium transition-colors cursor-pointer"
+        >
+          <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+          </svg>
+          <span>Replay Motion</span>
+        </button>
+      </div>
+
+      <!-- Safe-Zone Stage -->
+      <div class="flex-1 min-h-[290px] bg-obsidian stage-grid border border-hairline rounded-xl p-3 flex items-center justify-center relative overflow-hidden">
+        <!-- Aspect Ratio Pill Indicator -->
+        <div class="absolute top-2.5 left-2.5 z-20 flex items-center gap-1.5 px-2 py-0.5 rounded bg-panel/90 border border-hairline text-[10px] font-mono text-gray-400">
+          <span id="stage-aspect-badge" class="text-amber-300 font-semibold">9:16</span>
+          <span>•</span>
+          <span id="stage-safezone-label">Reels / Shorts Safe</span>
+        </div>
+
+        <!-- Dynamic Frame Container -->
+        <div
+          id="preview-frame"
+          class="relative overflow-hidden rounded-xl border border-gray-700/80 shadow-2xl bg-[#0D1017] transition-all duration-300 flex flex-col"
+          style="height: 100%; max-height: 100%; aspect-ratio: 9 / 16;"
+        >
+          <!-- Top Facecam Zone -->
+          <div id="scene-facecam-zone" class="h-[36%] w-full bg-gradient-to-br from-[#1B2230] via-[#131823] to-[#0E121A] border-b border-white/10 relative overflow-hidden flex items-center justify-center transition-all duration-300">
+            <div class="absolute -top-6 -left-6 w-24 h-24 rounded-full bg-amber-500/15 blur-xl"></div>
+            <div class="absolute -bottom-6 -right-6 w-24 h-24 rounded-full bg-emerald-500/10 blur-xl"></div>
+
+            <div class="relative flex flex-col items-center">
+              <div class="w-9 h-9 rounded-full bg-gradient-to-b from-gray-500/40 to-gray-700/40 border border-white/15 flex items-center justify-center">
+                <div class="w-4 h-4 rounded-full bg-gray-300/60"></div>
+              </div>
+              <div class="w-14 h-5 rounded-t-full bg-gray-600/35 border-t border-white/10 mt-1"></div>
+            </div>
+
+            <!-- Audio EQ Indicator -->
+            <div class="absolute bottom-2 left-2.5 flex items-end gap-0.5 h-3">
+              <span class="eq-bar w-0.5 h-3 bg-emerald-400 rounded-full" style="animation-delay: 0ms;"></span>
+              <span class="eq-bar w-0.5 h-2 bg-emerald-400 rounded-full" style="animation-delay: 180ms;"></span>
+              <span class="eq-bar w-0.5 h-3 bg-amber-400 rounded-full" style="animation-delay: 340ms;"></span>
+              <span class="eq-bar w-0.5 h-1.5 bg-emerald-400 rounded-full" style="animation-delay: 500ms;"></span>
+            </div>
+            <span class="absolute top-2 right-2 text-[9px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded bg-black/50 text-gray-400 border border-white/10">CAM</span>
+          </div>
+
+          <!-- Main Feed Zone -->
+          <div id="scene-main-zone" class="flex-1 w-full bg-gradient-to-b from-[#101622] via-[#0B0F17] to-[#080B10] relative overflow-hidden flex items-center justify-center">
+            <div class="absolute inset-0 opacity-25" style="background-image: radial-gradient(circle at 50% 45%, rgba(245, 158, 11, 0.22), transparent 65%);"></div>
+            <div class="absolute inset-x-0 bottom-0 h-1/2 opacity-20" style="background-image: linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px); background-size: 16px 16px; transform: perspective(180px) rotateX(48deg);"></div>
+
+            <div class="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center">
+              <div class="w-2 h-2 rounded-full bg-amber-400/50"></div>
+            </div>
+          </div>
+
+          <!-- Safe-Zone Guides (z-10) -->
+          <div id="safe-zone-guides" class="absolute inset-0 pointer-events-none z-10">
+            <div class="absolute inset-x-2.5 top-7 bottom-11 border border-dashed border-white/20 rounded-md"></div>
+
+            <div id="safe-zone-right-icons" class="absolute right-2 bottom-14 flex flex-col items-center gap-2.5 opacity-45">
+              <div class="w-5 h-5 rounded-full bg-white/15 border border-white/25 flex items-center justify-center">
+                <div class="w-2 h-2 rounded-full bg-white/70"></div>
+              </div>
+              <div class="w-5 h-5 rounded-full bg-white/15 border border-white/25 flex items-center justify-center">
+                <div class="w-2 h-1.5 rounded-sm bg-white/70"></div>
+              </div>
+              <div class="w-5 h-5 rounded-full bg-white/15 border border-white/25 flex items-center justify-center">
+                <div class="w-2 h-2 rotate-45 border-t border-r border-white/80"></div>
+              </div>
+            </div>
+
+            <div class="absolute inset-x-3 bottom-2.5 flex flex-col gap-1 opacity-40">
+              <div class="w-20 h-1.5 rounded-full bg-white/40"></div>
+              <div class="w-28 h-1 rounded-full bg-white/25"></div>
+            </div>
+          </div>
+
+          <!-- 3s Viral Hook Banner — pycaps-style pill (z-20) -->
+          <div id="stage-hook-banner" class="hook-animate absolute inset-x-3 z-20 flex justify-center pointer-events-none" style="top: 8%;">
+            <div id="hook-banner-pill" class="px-4 py-2 rounded-2xl bg-[#FFDD00] text-black font-black text-[10px] tracking-tight uppercase shadow-lg text-center leading-tight">
+              WAIT FOR THE FINAL CLUTCH 🔥
+            </div>
+          </div>
+
+          <!-- Word-by-Word Caption Overlay (z-20) -->
+          <div
+            id="stage-caption-container"
+            class="absolute inset-x-2 z-20 flex items-center justify-center pointer-events-none transition-all duration-200"
+            style="bottom: 26%;"
+          >
+            <div
+              id="stage-caption-text"
+              class="font-montserrat font-black text-lg sm:text-xl tracking-tight uppercase text-center leading-none px-2 py-1 rounded-md drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]"
+            >
+              <span class="caption-word" data-word-idx="0">This</span>
+              <span class="caption-word mx-1" data-word-idx="1">is</span>
+              <span class="caption-word" data-word-idx="2">a</span>
+              <span class="caption-word mx-1" data-word-idx="3">sample</span>
+              <span class="caption-word" data-word-idx="4">caption</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Typography & Caption Controls -->
+      <div class="bg-obsidian/80 border border-hairline rounded-xl p-2.5 flex flex-col gap-2 shrink-0">
+        <div class="grid grid-cols-2 gap-2">
+          <!-- Animation Style -->
+          <div>
+            <label for="select-caption-anim" class="block text-[10px] font-medium text-gray-400 mb-1">Animation Style</label>
+            <select
+              id="select-caption-anim"
+              class="studio-select w-full bg-panel border border-hairline hover:border-hairlineHover focus:border-amber-500/60 focus:outline-none rounded-lg px-2 py-1 text-[11px] text-gray-200 cursor-pointer"
+            >
+              <option value="explosive" selected>Explosive · Punch &amp; Pop</option>
+              <option value="hype">Hype · Neon Bounce</option>
+              <option value="minimalist">Minimalist · Clean Fade</option>
+              <option value="vibrant">Vibrant · Karaoke Glow</option>
+              <option value="retro-gaming">Retro Gaming · Pixel Flash</option>
+              <option value="classic">Classic · Subtitle Smooth</option>
+              <option value="hormozi">Hormozi · Gold Bold</option>
+            </select>
+          </div>
+
+          <!-- Font Choice -->
+          <div>
+            <label for="select-caption-font" class="block text-[10px] font-medium text-gray-400 mb-1">Font Choice</label>
+            <select
+              id="select-caption-font"
+              class="studio-select w-full bg-panel border border-hairline hover:border-hairlineHover focus:border-amber-500/60 focus:outline-none rounded-lg px-2 py-1 text-[11px] text-gray-200 cursor-pointer"
+            >
+              <option value="Montserrat" selected>Montserrat</option>
+              <option value="Poppins">Poppins</option>
+              <option value="Roboto">Roboto</option>
+              <option value="Bebas Neue">Bebas Neue</option>
+              <option value="SF Pro Display">SF Pro Display</option>
+              <option value="TikTok Sans">TikTok Sans</option>
+              <option value="Luckiest Guy">Luckiest Guy</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 items-end">
+          <!-- Brand Accent Color Swatches -->
+          <div>
+            <span class="block text-[10px] font-medium text-gray-400 mb-1">Brand Accent</span>
+            <div class="flex items-center gap-1.5 h-7">
+              <button
+                type="button"
+                data-color="#FFDD00"
+                data-name="yellow"
+                title="High-Voltage Yellow (#FFDD00)"
+                class="swatch-btn w-6 h-6 rounded-md bg-[#FFDD00] ring-2 ring-offset-2 ring-offset-obsidian ring-amber-300 transition-transform scale-105 cursor-pointer"
+              ></button>
+              <button
+                type="button"
+                data-color="#00FF66"
+                data-name="neon_green"
+                title="Neon Green (#00FF66)"
+                class="swatch-btn w-6 h-6 rounded-md bg-[#00FF66] opacity-75 hover:opacity-100 transition-all cursor-pointer"
+              ></button>
+              <button
+                type="button"
+                data-color="#00E5FF"
+                data-name="electric_cyan"
+                title="Electric Cyan (#00E5FF)"
+                class="swatch-btn w-6 h-6 rounded-md bg-[#00E5FF] opacity-75 hover:opacity-100 transition-all cursor-pointer"
+              ></button>
+              <button
+                type="button"
+                data-color="#FF2A85"
+                data-name="hot_pink"
+                title="Hot Pink (#FF2A85)"
+                class="swatch-btn w-6 h-6 rounded-md bg-[#FF2A85] opacity-75 hover:opacity-100 transition-all cursor-pointer"
+              ></button>
+              <button
+                type="button"
+                data-color="#FFFFFF"
+                data-name="pure_white"
+                title="Pure White (#FFFFFF)"
+                class="swatch-btn w-6 h-6 rounded-md bg-[#FFFFFF] opacity-75 hover:opacity-100 transition-all cursor-pointer"
+              ></button>
+              <span id="swatch-hex-label" class="ml-1 text-[10px] font-mono text-gray-400">#FFDD00</span>
+            </div>
+          </div>
+
+          <!-- Subtitle Vertical Position -->
+          <div>
+            <label for="select-caption-pos" class="block text-[10px] font-medium text-gray-400 mb-1">Vertical Position</label>
+            <select
+              id="select-caption-pos"
+              class="studio-select w-full bg-panel border border-hairline hover:border-hairlineHover focus:border-amber-500/60 focus:outline-none rounded-lg px-2 py-1 text-[11px] text-gray-200 cursor-pointer"
+            >
+              <option value="bottom" selected>Bottom Safe (-26%)</option>
+              <option value="center">Center (0%)</option>
+              <option value="upper">Upper Third (+22%)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Hook Position -->
+        <div>
+          <label for="select-hook-pos" class="block text-[10px] font-medium text-gray-400 mb-1">Hook Position</label>
+          <div class="grid grid-cols-3 bg-obsidian p-0.5 rounded-lg border border-hairline">
+            <button type="button" data-hookpos="top" class="hook-pos-btn py-1 rounded-md text-[11px] font-medium bg-surface text-amber-300 border border-hairlineHover transition-all cursor-pointer">Top</button>
+            <button type="button" data-hookpos="center" class="hook-pos-btn py-1 rounded-md text-[11px] font-medium text-gray-400 hover:text-gray-200 border border-transparent transition-all cursor-pointer">Center</button>
+            <button type="button" data-hookpos="bottom" class="hook-pos-btn py-1 rounded-md text-[11px] font-medium text-gray-400 hover:text-gray-200 border border-transparent transition-all cursor-pointer">Bottom</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- RIGHT COLUMN (34% Width — Execution & Telemetry)                    -->
+    <!-- =================================================================== -->
+    <section class="w-full lg:w-[34%] bg-panel border border-hairline rounded-xl p-3.5 flex flex-col gap-3 lg:h-full overflow-hidden">
+
+      <!-- Prominent Primary CTA Bar -->
+      <div class="flex items-center gap-2 shrink-0">
+        <button
+          id="btn-make-clips"
+          type="button"
+          class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 active:scale-[0.99] text-obsidian font-semibold text-xs tracking-wide shadow-lg shadow-amber-500/10 transition-all cursor-pointer"
+        >
+          <svg class="w-4 h-4 text-obsidian" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9L12 3z"></path>
+            <path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15z"></path>
+          </svg>
+          <span id="make-clips-label">Make Clips</span>
+        </button>
+
+        <button
+          id="btn-stop-clips"
+          type="button"
+          disabled
+          class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-surface text-gray-500 border border-hairline text-xs font-semibold transition-all cursor-not-allowed"
+        >
+          <span class="w-2.5 h-2.5 rounded-xs bg-current"></span>
+          <span>Stop</span>
+        </button>
+      </div>
+
+      <!-- Overall Progress Card -->
+      <div class="bg-obsidian border border-hairline rounded-xl p-3 shrink-0">
+        <div class="flex items-center justify-between mb-1.5">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-semibold text-gray-200">Overall Progress</span>
+            <span id="pipeline-status-pill" class="px-1.5 py-0.5 rounded text-[10px] font-mono font-medium bg-amber-500/15 text-amber-300 border border-amber-500/25">
+              READY • STEP 0/8
+            </span>
+          </div>
+          <span id="overall-percent-text" class="text-xs font-mono font-semibold text-amber-300">0%</span>
+        </div>
+
+        <div class="w-full h-2 rounded-full bg-surface overflow-hidden">
+          <div
+            id="overall-progress-bar"
+            class="h-full rounded-full bg-gradient-to-r from-amber-500 to-emerald-400 transition-all duration-300"
+            style="width: 0%;"
+          ></div>
+        </div>
+      </div>
+
+      <!-- 8-Step Pipeline Tracker -->
+      <div class="bg-obsidian border border-hairline rounded-xl p-3 shrink-0">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[11px] font-semibold uppercase tracking-wider text-gray-400">8-Step Pipeline Tracker</span>
+          <span id="active-step-percent" class="text-[11px] font-mono text-gray-400">Ready</span>
+        </div>
+
+        <div id="pipeline-steps-grid" class="grid grid-cols-2 gap-1.5 mb-2.5">
+          <!-- Populated dynamically -->
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span id="active-step-label" class="text-[11px] font-mono text-gray-400 truncate flex-1">Ready - paste a video link and click Make Clips</span>
+          <div class="w-24 h-1.5 rounded-full bg-surface overflow-hidden shrink-0">
+            <div id="step-progress-bar" class="h-full rounded-full bg-amber-400 transition-all duration-200" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Monospace Live Activity Console -->
+      <div class="flex-1 min-h-[170px] bg-obsidian border border-hairline rounded-xl flex flex-col overflow-hidden">
+        <div class="px-3 py-2 border-b border-hairline bg-surface/50 flex items-center justify-between shrink-0">
+          <div class="flex items-center gap-2">
+            <span id="console-pulse-dot" class="w-2 h-2 rounded-full bg-gray-500"></span>
+            <span class="text-[11px] font-semibold uppercase tracking-wider text-gray-300">Live Activity Console</span>
+          </div>
+
+          <button
+            id="btn-copy-logs"
+            type="button"
+            class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-panel hover:bg-elevated text-gray-400 hover:text-gray-200 border border-hairline text-[10px] font-mono transition-colors cursor-pointer"
+          >
+            <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span>Copy Logs</span>
+          </button>
+        </div>
+
+        <div
+          id="telemetry-console"
+          class="flex-1 p-3 font-mono text-[11px] leading-relaxed text-gray-300 overflow-y-auto studio-scroll space-y-1 select-text"
+        >
+          <!-- Logs injected by backend -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- 3. RESULTS STUDIO MODAL / DRAWER                                      -->
+  <!-- ===================================================================== -->
+  <div id="results-modal-backdrop" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-end">
+    <div class="w-full max-w-xl h-full bg-panel border-l border-hairline flex flex-col shadow-2xl">
+      <!-- Drawer Header -->
+      <div class="h-14 px-5 border-b border-hairline flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-gray-100">Results Studio</h3>
+            <p class="text-[11px] text-gray-400">AI-ranked viral candidates ready for review</p>
+          </div>
+        </div>
+
+        <button
+          id="btn-close-results"
+          type="button"
+          class="p-1.5 rounded-lg bg-surface hover:bg-elevated text-gray-400 hover:text-white border border-hairline cursor-pointer"
+        >
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Drawer Body: Viral Clips List -->
+      <div id="results-clips-list" class="flex-1 overflow-y-auto studio-scroll p-4 space-y-3">
+        <!-- Populated dynamically via JS -->
+      </div>
+
+      <!-- Drawer Footer -->
+      <div class="px-5 py-3 border-t border-hairline bg-obsidian/70 flex items-center justify-between shrink-0">
+        <span class="text-xs text-gray-400 font-mono">Format: MP4 • Word-level Captions • Audio Boost</span>
+        <button
+          id="btn-export-all"
+          type="button"
+          class="px-3.5 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-obsidian font-semibold text-xs transition-colors cursor-pointer"
+        >
+          Open Output Folder
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- 4. NON-INTRUSIVE TOAST NOTIFICATION                                   -->
+  <!-- ===================================================================== -->
+  <!-- Fix: prevent browser auto-scroll on toggle click by anchoring checkbox inside relative toggle-card directly over the switch -->
+  <style>
+    .toggle-card {
+      position: relative !important;
+    }
+    .toggle-card input[type="checkbox"] {
+      position: absolute !important;
+      right: 0.75rem !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      width: 2.5rem !important;
+      height: 1.25rem !important;
+      opacity: 0 !important;
+      margin: 0 !important;
+      cursor: pointer !important;
+      z-index: 10 !important;
+    }
+  </style>
+  <div
+    id="studio-toast"
+    class="fixed bottom-4 right-4 z-50 pointer-events-none opacity-0 translate-y-2 transition-all duration-200"
+  >
+    <div class="bg-elevated border border-hairlineHover text-gray-100 px-3.5 py-2.5 rounded-xl shadow-2xl flex items-center gap-2.5 text-xs">
+      <span id="toast-dot" class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+      <span id="toast-message" class="font-medium">Action completed</span>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- 5. STUDIO APPLICATION LOGIC & PYTHON BRIDGE                           -->
+  <!-- ===================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      const PIPELINE_STEPS = [
+        { id: 1, name: 'Fetch Media' },
+        { id: 2, name: 'Extract Audio' },
+        { id: 3, name: 'Transcribe Speech' },
+        { id: 4, name: 'LLM Story Judge' },
+        { id: 5, name: 'Smart Framing' },
+        { id: 6, name: 'Motion Captions' },
+        { id: 7, name: 'Hook & Audio Mix' },
+        { id: 8, name: 'Render Clips' },
+      ];
+
+      const NICHE_PRESETS = {
+        'gaming': {
+          summary: 'Gaming • {AR} Split • 30s+ Complete play with buildup, tension, and funny freakout',
+          hook: 'WAIT FOR THE FINAL CLUTCH 🔥',
+        },
+        'streaming': {
+          summary: 'Streaming • {AR} Split or Fit • 30s+ Complete story to chat, drama, relatable punchlines',
+          hook: 'YOU WILL NOT BELIEVE WHAT CHAT SAID 😱',
+        },
+        'podcast': {
+          summary: 'Podcast • {AR} Fit • 35s+ Complete argument, debate, storytelling with payoff',
+          hook: 'NOBODY TALKS ABOUT THIS TRUTH 💡',
+        },
+        'interviews': {
+          summary: 'Interviews • {AR} Fit • 35s+ Controversial revelations, celebrity stories, hot takes',
+          hook: 'THE UNFILTERED TRUTH REVEALED 🎙️',
+        },
+        'finance_crypto': {
+          summary: 'Finance • {AR} Clean Focus • 30s+ Actionable advice, trading calls, case studies',
+          hook: 'THE 1 RULE THAT CHANGES EVERYTHING 📈',
+        },
+        'motivation': {
+          summary: 'Motivation • {AR} Dynamic Zoom • 30s+ Intense speeches, mindset shifts, discipline truth',
+          hook: 'LISTEN TO THIS IF YOU FEEL STUCK ⚡',
+        },
+        'education_tech': {
+          summary: 'Tech / SaaS • {AR} Fit • 30s+ AI tools, websites, step-by-step hacks',
+          hook: 'STOP DOING THIS THE HARD WAY 🛠️',
+        },
+        'entertainment': {
+          summary: 'Entertainment • {AR} Split/Crop • 30s+ Setup, joke progression, viral punchline',
+          hook: 'I WAS NOT EXPECTING THIS ENDING 💀',
+        },
+        'irl': {
+          summary: 'IRL / Vlog • {AR} Split/Crop • 30s+ Natural encounters, funny misunderstandings',
+          hook: 'WE COULD NOT STOP LAUGHING 😂',
+        },
+        'music': {
+          summary: 'Music • {AR} Split/Crop • 30s+ Beat drops, freestyle flow, vocal climax',
+          hook: 'WAIT FOR THE BEAT DROP 🎧',
+        },
+      };
+
+      const state = {
+        aspectRatio: '9:16',
+        niche: 'gaming',
+        framing: 'auto',
+        clipLimit: '5 (Recommended - ~4 mins)',
+        captionsEnabled: true,
+        hookEnabled: true,
+        deadairEnabled: true,
+        bleepEnabled: true,
+        animStyle: 'explosive',
+        font: 'Montserrat',
+        accentColor: '#FFDD00',
+        brandColorName: 'yellow',
+        captionPos: 'bottom',
+        hookPosition: 'top',
+        platform: 'tiktok',
+        aiModel: 'qwen2.5:1.5b',
+        isRunning: false,
+        currentStep: 0,
+        stepPercent: 0,
+        overallPercent: 0,
+        activeWordIndex: 0,
+        logs: [],
+        clips: [],
+      };
+
+      let captionLoopTimer = null;
+      let toastTimer = null;
+
+      // DOM Elements
+      const el = {
+        videoInput: document.getElementById('video-source-input'),
+        sourceTypeLabel: document.getElementById('source-type-label'),
+        btnResetUrl: document.getElementById('btn-reset-url'),
+        btnBrowseFile: document.getElementById('btn-browse-file'),
+
+        selectNiche: document.getElementById('select-niche'),
+        aspectBtns: document.querySelectorAll('.aspect-btn'),
+        selectFraming: document.getElementById('select-framing'),
+        selectClipLimit: document.getElementById('select-clip-limit'),
+        presetSummaryText: document.getElementById('preset-summary-text'),
+
+        toggleCaptions: document.getElementById('toggle-captions'),
+        toggleHook: document.getElementById('toggle-hook'),
+        toggleDeadAir: document.getElementById('toggle-deadair'),
+        toggleBleep: document.getElementById('toggle-bleep'),
+
+        modelCards: document.querySelectorAll('.model-card'),
+
+        selectFacecam: document.getElementById('select-facecam'),
+        selectBuffer: document.getElementById('select-buffer'),
+        selectCookies: document.getElementById('select-cookies'),
+        inputFocusTopic: document.getElementById('input-focus-topic'),
+
+        hookPosBtns: document.querySelectorAll('.hook-pos-btn'),
+
+        btnReplayMotion: document.getElementById('btn-replay-motion'),
+        previewFrame: document.getElementById('preview-frame'),
+        stageAspectBadge: document.getElementById('stage-aspect-badge'),
+        stageSafezoneLabel: document.getElementById('stage-safezone-label'),
+        sceneFacecamZone: document.getElementById('scene-facecam-zone'),
+        safeZoneRightIcons: document.getElementById('safe-zone-right-icons'),
+        stageHookBanner: document.getElementById('stage-hook-banner'),
+        hookBannerPill: document.getElementById('hook-banner-pill'),
+        stageCaptionContainer: document.getElementById('stage-caption-container'),
+        stageCaptionText: document.getElementById('stage-caption-text'),
+        captionWords: document.querySelectorAll('.caption-word'),
+
+        selectCaptionAnim: document.getElementById('select-caption-anim'),
+        selectCaptionFont: document.getElementById('select-caption-font'),
+        swatchBtns: document.querySelectorAll('.swatch-btn'),
+        swatchHexLabel: document.getElementById('swatch-hex-label'),
+        selectCaptionPos: document.getElementById('select-caption-pos'),
+
+        btnMakeClips: document.getElementById('btn-make-clips'),
+        makeClipsLabel: document.getElementById('make-clips-label'),
+        btnStopClips: document.getElementById('btn-stop-clips'),
+        pipelineStatusPill: document.getElementById('pipeline-status-pill'),
+        overallPercentText: document.getElementById('overall-percent-text'),
+        overallProgressBar: document.getElementById('overall-progress-bar'),
+        pipelineStepsGrid: document.getElementById('pipeline-steps-grid'),
+        activeStepPercent: document.getElementById('active-step-percent'),
+        activeStepLabel: document.getElementById('active-step-label'),
+        stepProgressBar: document.getElementById('step-progress-bar'),
+        telemetryConsole: document.getElementById('telemetry-console'),
+        consolePulseDot: document.getElementById('console-pulse-dot'),
+        btnCopyLogs: document.getElementById('btn-copy-logs'),
+
+        btnOutputFolder: document.getElementById('btn-output-folder'),
+        btnResultsStudio: document.getElementById('btn-results-studio'),
+        resultsCountBadge: document.getElementById('results-count-badge'),
+        resultsModalBackdrop: document.getElementById('results-modal-backdrop'),
+        btnCloseResults: document.getElementById('btn-close-results'),
+        resultsClipsList: document.getElementById('results-clips-list'),
+        btnExportAll: document.getElementById('btn-export-all'),
+
+        studioToast: document.getElementById('studio-toast'),
+        toastDot: document.getElementById('toast-dot'),
+        toastMessage: document.getElementById('toast-message'),
+      };
+
+      // Toast
+      function showToast(message, type = 'success') {
+        el.toastMessage.textContent = message;
+        el.toastDot.className = 'w-2 h-2 rounded-full shrink-0 ' + (
+          type === 'warning' ? 'bg-amber-400' :
+          type === 'error' ? 'bg-rose-400' : 'bg-emerald-400'
+        );
+
+        el.studioToast.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
+        el.studioToast.classList.add('opacity-100', 'translate-y-0');
+
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          el.studioToast.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none');
+          el.studioToast.classList.remove('opacity-100', 'translate-y-0');
+        }, 2800);
+      }
+
+      function copyTextToClipboard(text, successMsg) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => {
+            showToast(successMsg, 'success');
+          }).catch(() => fallbackCopy(text, successMsg));
+        } else {
+          fallbackCopy(text, successMsg);
+        }
+      }
+
+      function fallbackCopy(text, successMsg) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          document.execCommand('copy');
+          showToast(successMsg, 'success');
+        } catch (err) {
+          showToast('Unable to copy to clipboard', 'error');
+        } finally {
+          document.body.removeChild(textarea);
+        }
+      }
+
+      function updateHookPosition() {
+        if (state.hookPosition === 'top') {
+          el.stageHookBanner.style.top = '8%';
+          el.stageHookBanner.style.bottom = 'auto';
+          el.stageHookBanner.style.transform = 'none';
+        } else if (state.hookPosition === 'center') {
+          el.stageHookBanner.style.top = '50%';
+          el.stageHookBanner.style.bottom = 'auto';
+          el.stageHookBanner.style.transform = 'translateY(-50%)';
+        } else if (state.hookPosition === 'bottom') {
+          el.stageHookBanner.style.bottom = '24%';
+          el.stageHookBanner.style.top = 'auto';
+          el.stageHookBanner.style.transform = 'none';
+        }
+
+        // Update hook pos button active states
+        el.hookPosBtns.forEach((btn) => {
+          const pos = btn.getAttribute('data-hookpos');
+          if (pos === state.hookPosition) {
+            btn.className = 'hook-pos-btn py-1 rounded-md text-[11px] font-medium bg-surface text-amber-300 border border-hairlineHover transition-all cursor-pointer';
+          } else {
+            btn.className = 'hook-pos-btn py-1 rounded-md text-[11px] font-medium text-gray-400 hover:text-gray-200 border border-transparent transition-all cursor-pointer';
+          }
+        });
+      }
+
+      function updatePresetAndStage() {
+        const preset = NICHE_PRESETS[state.niche] || NICHE_PRESETS['gaming'];
+        el.presetSummaryText.textContent = preset.summary.replace('{AR}', state.aspectRatio);
+
+        if (el.hookBannerPill) {
+          el.hookBannerPill.textContent = preset.hook;
+        }
+
+        el.stageAspectBadge.textContent = state.aspectRatio;
+        if (state.aspectRatio === '9:16') {
+          el.previewFrame.style.aspectRatio = '9 / 16';
+          el.previewFrame.style.height = '100%';
+          el.previewFrame.style.width = 'auto';
+          el.stageSafezoneLabel.textContent = 'Reels / Shorts Safe';
+          el.safeZoneRightIcons.classList.remove('hidden');
+        } else if (state.aspectRatio === '1:1') {
+          el.previewFrame.style.aspectRatio = '1 / 1';
+          el.previewFrame.style.height = '88%';
+          el.previewFrame.style.width = 'auto';
+          el.stageSafezoneLabel.textContent = 'Square Feed Safe';
+          el.safeZoneRightIcons.classList.add('hidden');
+        } else {
+          el.previewFrame.style.aspectRatio = '16 / 9';
+          el.previewFrame.style.height = 'auto';
+          el.previewFrame.style.width = '100%';
+          el.stageSafezoneLabel.textContent = 'Widescreen 16:9';
+          el.safeZoneRightIcons.classList.add('hidden');
+        }
+
+        const showSplit = state.framing !== 'fill' && state.aspectRatio !== '16:9';
+        if (showSplit) {
+          el.sceneFacecamZone.classList.remove('hidden');
+        } else {
+          el.sceneFacecamZone.classList.add('hidden');
+        }
+
+        el.stageHookBanner.classList.toggle('hidden', !state.hookEnabled);
+        el.stageCaptionContainer.classList.toggle('hidden', !state.captionsEnabled);
+
+        if (state.captionPos === 'bottom') {
+          el.stageCaptionContainer.style.bottom = '26%';
+          el.stageCaptionContainer.style.top = 'auto';
+          el.stageCaptionContainer.style.transform = 'none';
+        } else if (state.captionPos === 'center') {
+          el.stageCaptionContainer.style.top = '50%';
+          el.stageCaptionContainer.style.bottom = 'auto';
+          el.stageCaptionContainer.style.transform = 'translateY(-50%)';
+        } else {
+          el.stageCaptionContainer.style.top = '24%';
+          el.stageCaptionContainer.style.bottom = 'auto';
+          el.stageCaptionContainer.style.transform = 'none';
+        }
+
+        // Apply font (retro-gaming uses JetBrains Mono)
+        if (state.animStyle === 'retro-gaming') {
+          el.stageCaptionText.style.fontFamily = '"JetBrains Mono", monospace';
+        } else {
+          el.stageCaptionText.style.fontFamily = `"${state.font}", Montserrat, sans-serif`;
+        }
+
+        updateHookPosition();
+      }
+
+      function renderCaptionFrame() {
+        const style = state.animStyle;
+
+        // Apply font for retro-gaming
+        if (style === 'retro-gaming') {
+          el.stageCaptionText.style.fontFamily = '"JetBrains Mono", monospace';
+        } else {
+          el.stageCaptionText.style.fontFamily = `"${state.font}", Montserrat, sans-serif`;
+        }
+
+        el.captionWords.forEach((wordEl, idx) => {
+          const isActive = idx === state.activeWordIndex;
+
+          // Reset all styles
+          wordEl.style.color = '#FFFFFF';
+          wordEl.style.backgroundColor = 'transparent';
+          wordEl.style.transform = 'scale(1) translateY(0px)';
+          wordEl.style.padding = '0 2px';
+          wordEl.style.borderRadius = '4px';
+          wordEl.style.opacity = '1';
+          wordEl.style.textDecoration = 'none';
+          wordEl.style.textShadow = '';
+          wordEl.style.border = '';
+          wordEl.style.textTransform = '';
+
+          if (style === 'explosive') {
+            // White text, yellow active word, scale + lift, font-black, heavy drop shadow
+            wordEl.style.textShadow = '0 3px 12px rgba(0,0,0,0.9), 0 1px 4px rgba(0,0,0,0.8)';
+            if (isActive) {
+              wordEl.style.color = '#FFDD00';
+              wordEl.style.transform = 'scale(1.2) translateY(-3px)';
+              wordEl.style.textShadow = '0 4px 16px rgba(255,221,0,0.5), 0 2px 8px rgba(0,0,0,0.9)';
+            }
+
+          } else if (style === 'hype') {
+            // Neon green active word highlight, background pill on active, bouncy
+            if (isActive) {
+              wordEl.style.backgroundColor = '#00FF66';
+              wordEl.style.color = '#0B0D10';
+              wordEl.style.padding = '1px 6px';
+              wordEl.style.transform = 'scale(1.15)';
+              wordEl.style.borderRadius = '6px';
+            } else {
+              wordEl.style.color = '#FFFFFF';
+            }
+
+          } else if (style === 'minimalist') {
+            // Gray-300 text, white active word, opacity 1 vs 0.5, no scale
+            wordEl.style.color = isActive ? '#FFFFFF' : '#D1D5DB';
+            wordEl.style.opacity = isActive ? '1' : '0.5';
+
+          } else if (style === 'vibrant') {
+            // Cyan background highlight on active word, rest is white
+            if (isActive) {
+              wordEl.style.backgroundColor = '#00E5FF';
+              wordEl.style.color = '#0B0D10';
+              wordEl.style.padding = '1px 6px';
+              wordEl.style.borderRadius = '6px';
+              wordEl.style.transform = 'scale(1.08)';
+            } else {
+              wordEl.style.color = '#FFFFFF';
+            }
+
+          } else if (style === 'retro-gaming') {
+            // All caps, monospace, active word gets yellow border box + scale, green text
+            wordEl.style.color = '#00FF66';
+            wordEl.style.textTransform = 'uppercase';
+            if (isActive) {
+              wordEl.style.border = '1.5px solid #FFDD00';
+              wordEl.style.padding = '1px 5px';
+              wordEl.style.borderRadius = '3px';
+              wordEl.style.transform = 'scale(1.1)';
+              wordEl.style.textShadow = '0 0 8px rgba(0,255,102,0.7)';
+            }
+
+          } else if (style === 'classic') {
+            // White text, active word slightly brighter + underline
+            wordEl.style.color = isActive ? '#FFFFFF' : '#D1D5DB';
+            if (isActive) {
+              wordEl.style.textDecoration = 'underline';
+              wordEl.style.textShadow = '0 1px 6px rgba(255,255,255,0.3)';
+            }
+
+          } else if (style === 'hormozi') {
+            // Yellow active word, big scale + lift, font-black bold, rest white
+            if (isActive) {
+              wordEl.style.color = '#FFDD00';
+              wordEl.style.transform = 'scale(1.25) translateY(-4px)';
+              wordEl.style.textShadow = '0 4px 16px rgba(255,221,0,0.5), 0 2px 8px rgba(0,0,0,0.9)';
+            } else {
+              wordEl.style.color = '#FFFFFF';
+            }
+          }
+        });
+      }
+
+      function startCaptionLoop() {
+        clearInterval(captionLoopTimer);
+        state.activeWordIndex = 0;
+        renderCaptionFrame();
+
+        captionLoopTimer = setInterval(() => {
+          state.activeWordIndex = (state.activeWordIndex + 1) % 5;
+          renderCaptionFrame();
+        }, 620);
+      }
+
+      function replayMotionPreview() {
+        el.stageHookBanner.classList.remove('hook-animate');
+        void el.stageHookBanner.offsetWidth;
+        el.stageHookBanner.classList.add('hook-animate');
+        startCaptionLoop();
+      }
+
+      function renderPipelineUI() {
+        el.overallPercentText.textContent = `${state.overallPercent}%`;
+        el.overallProgressBar.style.width = `${state.overallPercent}%`;
+
+        const currentStepObj = PIPELINE_STEPS.find((s) => s.id === state.currentStep) || PIPELINE_STEPS[0];
+        el.activeStepPercent.textContent = state.isRunning ? `Step ${state.currentStep}: ${state.stepPercent}%` : (state.overallPercent >= 100 ? 'Done' : 'Ready');
+        el.stepProgressBar.style.width = `${state.stepPercent}%`;
+
+        if (state.isRunning) {
+          el.pipelineStatusPill.textContent = `RUNNING • STEP ${state.currentStep}/8`;
+          el.pipelineStatusPill.className = 'px-1.5 py-0.5 rounded text-[10px] font-mono font-medium bg-emerald-500/15 text-emerald-300 border border-emerald-500/30';
+          el.consolePulseDot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-ping';
+
+          el.btnMakeClips.disabled = true;
+          el.btnMakeClips.classList.add('opacity-60', 'cursor-not-allowed');
+          el.makeClipsLabel.textContent = 'Processing...';
+
+          el.btnStopClips.disabled = false;
+          el.btnStopClips.className = 'inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/40 text-xs font-semibold transition-all cursor-pointer';
+        } else {
+          const isDone = state.overallPercent >= 100;
+          el.pipelineStatusPill.textContent = isDone ? 'COMPLETED • 8/8' : `READY • STEP ${state.currentStep}/8`;
+          el.pipelineStatusPill.className = isDone
+            ? 'px-1.5 py-0.5 rounded text-[10px] font-mono font-medium bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
+            : 'px-1.5 py-0.5 rounded text-[10px] font-mono font-medium bg-amber-500/15 text-amber-300 border border-amber-500/25';
+          el.consolePulseDot.className = 'w-2 h-2 rounded-full bg-gray-500';
+
+          el.btnMakeClips.disabled = false;
+          el.btnMakeClips.classList.remove('opacity-60', 'cursor-not-allowed');
+          el.makeClipsLabel.textContent = 'Make Clips';
+
+          el.btnStopClips.disabled = true;
+          el.btnStopClips.className = 'inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-surface text-gray-500 border border-hairline text-xs font-semibold transition-all cursor-not-allowed';
+        }
+
+        el.pipelineStepsGrid.innerHTML = PIPELINE_STEPS.map((step) => {
+          const isCompleted = step.id < state.currentStep || state.overallPercent >= 100;
+          const isActive = step.id === state.currentStep && state.overallPercent < 100;
+
+          let containerCls = 'flex items-center gap-2 px-2 py-1 rounded-lg border text-[11px] transition-colors ';
+          let iconHtml = '';
+
+          if (isCompleted) {
+            containerCls += 'bg-emerald-500/5 border-emerald-500/20 text-gray-200';
+            iconHtml = `<svg class="w-3 h-3 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+          } else if (isActive) {
+            containerCls += 'bg-amber-500/10 border-amber-500/35 text-amber-200 font-medium';
+            iconHtml = `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0 ${state.isRunning ? 'animate-pulse' : ''}"></span>`;
+          } else {
+            containerCls += 'bg-panel/60 border-hairline/70 text-gray-500';
+            iconHtml = `<span class="w-2 h-2 rounded-full border border-gray-600 shrink-0"></span>`;
+          }
+
+          return `
+            <div class="${containerCls}">
+              ${iconHtml}
+              <span class="truncate"><span class="font-mono text-[10px] opacity-70 mr-0.5">${step.id}.</span>${step.name}</span>
+            </div>
+          `;
+        }).join('');
+      }
+
+      function renderConsoleLogs() {
+        el.telemetryConsole.innerHTML = state.logs.map((entry) => {
+          let tagColor = 'text-gray-400';
+          if (entry.tag === 'LLM' || entry.tag === 'STEP') tagColor = 'text-amber-300';
+          if (entry.tag === 'OK' || entry.tag === 'DONE') tagColor = 'text-emerald-400';
+          if (entry.tag === 'WARN' || entry.tag === 'ERR' || entry.tag === 'ERROR') tagColor = 'text-rose-400';
+
+          return `
+            <div class="flex items-start gap-2">
+              <span class="${tagColor} shrink-0 font-semibold">[${entry.tag}]</span>
+              <span class="text-gray-300 break-words">${escapeHtml(entry.text)}</span>
+            </div>
+          `;
+        }).join('');
+
+        el.telemetryConsole.scrollTop = el.telemetryConsole.scrollHeight;
+      }
+
+      function appendLog(tag, text) {
+        state.logs.push({ tag, text });
+        if (state.logs.length > 300) state.logs.shift();
+        renderConsoleLogs();
+      }
+
+      function escapeHtml(str) {
+        return String(str || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+      }
+
+      function renderResultsStudio() {
+        el.resultsCountBadge.textContent = state.clips.length;
+        if (!state.clips.length) {
+          el.resultsClipsList.innerHTML = `
+            <div class="p-8 text-center text-gray-500 text-xs font-mono">
+              No clips rendered yet. Enter a video link and click Make Clips!
+            </div>
+          `;
+          return;
+        }
+
+        el.resultsClipsList.innerHTML = state.clips.map((clip, idx) => `
+          <div class="bg-obsidian border border-hairline hover:border-hairlineHover rounded-xl p-3 flex gap-3 transition-colors">
+            <div class="w-20 h-32 rounded-lg bg-gradient-to-b from-[#1A2130] to-[#0B0E14] border border-hairline shrink-0 relative overflow-hidden flex flex-col justify-between p-1.5">
+              <span class="text-[8px] font-mono px-1 py-0.5 rounded bg-black/60 text-gray-300 self-start">#0${idx + 1}</span>
+              <div class="text-[8px] font-montserrat font-black text-center leading-tight text-white drop-shadow">
+                ${clip.title ? escapeHtml(clip.title.slice(0, 20)) : 'VIRAL CLIP'}
+              </div>
+              <span class="text-[8px] font-mono text-gray-400 self-end">${clip.duration || ''}s</span>
+            </div>
+
+            <div class="flex-1 min-w-0 flex flex-col justify-between">
+              <div>
+                <div class="flex items-start justify-between gap-2">
+                  <h4 class="text-xs font-semibold text-gray-100 leading-snug">${escapeHtml(clip.title || 'Clip ' + (idx + 1))}</h4>
+                  <span class="shrink-0 px-1.5 py-0.5 rounded-md text-[10px] font-mono font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/25">
+                    ${clip.score || '8.5'}/10
+                  </span>
+                </div>
+                <p class="mt-1 text-[11px] font-mono text-amber-300/90 truncate">"${escapeHtml(clip.hook || '')}"</p>
+                <p class="mt-1 text-[11px] text-gray-400 line-clamp-2">${escapeHtml(clip.reason || clip.description || '')}</p>
+              </div>
+
+              <div class="mt-2 pt-2 border-t border-hairline/70 flex items-center justify-between gap-2">
+                <span class="text-[10px] font-mono text-gray-500">${clip.start || 0}s - ${clip.end || 0}s</span>
+                <div class="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    data-preview-hook="${escapeHtml(clip.hook || '')}"
+                    class="btn-load-stage px-2 py-1 rounded-md bg-surface hover:bg-elevated text-gray-200 border border-hairline text-[11px] font-medium transition-colors cursor-pointer"
+                  >
+                    Load in Stage
+                  </button>
+                  <button
+                    type="button"
+                    data-clip-file="${escapeHtml(clip.file || '')}"
+                    class="btn-open-clip px-2.5 py-1 rounded-md bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 border border-amber-500/30 text-[11px] font-medium transition-colors cursor-pointer"
+                  >
+                    Play
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+
+        document.querySelectorAll('.btn-load-stage').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const hookText = btn.getAttribute('data-preview-hook');
+            if (el.hookBannerPill && hookText) el.hookBannerPill.textContent = hookText;
+            el.resultsModalBackdrop.classList.add('hidden');
+            replayMotionPreview();
+            showToast('Loaded clip hook into Live Safe-Zone Stage', 'success');
+          });
+        });
+
+        document.querySelectorAll('.btn-open-clip').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const file = btn.getAttribute('data-clip-file');
+            if (window.pywebview && window.pywebview.api) {
+              window.pywebview.api.open_file(file);
+            }
+          });
+        });
+      }
+
+      // Python IPC Bridge
+      window.studioReceiveLog = function (msg) {
+        let tag = 'INFO';
+        if (msg.startsWith('ERROR') || msg.includes('FAILED')) tag = 'ERROR';
+        else if (msg.startsWith('DONE') || msg.startsWith('Finished')) tag = 'DONE';
+        else if (/^\d[a-z]?\/8/.test(msg)) tag = 'STEP';
+        else if (msg.includes('LLM') || msg.includes('Ollama')) tag = 'LLM';
+
+        appendLog(tag, msg);
+      };
+
+      window.studioReceiveProgress = function (stage, frac, text) {
+        state.stepPercent = Math.round(frac * 100);
+        el.activeStepLabel.textContent = text || stage;
+
+        const stageToStep = {
+          download: 1,
+          audio: 2,
+          transcribe: 3,
+          judge: 4,
+          layout: 5,
+          captions: 6,
+          hook: 7,
+          render: 8,
+        };
+        const s = stageToStep[stage] || state.currentStep || 1;
+        state.currentStep = s;
+        state.overallPercent = Math.min(100, Math.round(((s - 1) / 8) * 100 + (state.stepPercent / 8)));
+        renderPipelineUI();
+      };
+
+      window.studioReceiveResults = function (clipsList) {
+        state.clips = clipsList || [];
+        el.resultsCountBadge.textContent = state.clips.length;
+        renderResultsStudio();
+        showToast(`Auto Clipper produced ${state.clips.length} viral clips!`, 'success');
+      };
+
+      window.studioJobFinished = function (ok, msg) {
+        state.isRunning = false;
+        if (ok) {
+          state.overallPercent = 100;
+          state.stepPercent = 100;
+          appendLog('OK', msg || 'Processing completed successfully.');
+          showToast('Job completed! Check Results Studio or Output Folder.', 'success');
+        } else {
+          appendLog('WARN', msg || 'Job finished or stopped.');
+        }
+        renderPipelineUI();
+      };
+
+      // Events
+
+      el.btnBrowseFile.addEventListener('click', () => {
+        if (window.pywebview && window.pywebview.api) {
+          window.pywebview.api.browse_file().then((selected) => {
+            if (selected) {
+              el.videoInput.value = selected;
+              el.sourceTypeLabel.textContent = 'Local File';
+              el.btnResetUrl.classList.remove('hidden');
+              showToast('Selected file: ' + selected.split(/[\/\\]/).pop(), 'success');
+            }
+          });
+        }
+      });
+
+      el.btnResetUrl.addEventListener('click', () => {
+        el.videoInput.value = '';
+        el.sourceTypeLabel.textContent = 'YouTube / Twitch URL';
+        el.btnResetUrl.classList.add('hidden');
+      });
+
+      el.selectNiche.addEventListener('change', (e) => {
+        state.niche = e.target.value;
+        updatePresetAndStage();
+        replayMotionPreview();
+      });
+
+      el.selectFraming.addEventListener('change', (e) => {
+        state.framing = e.target.value;
+        updatePresetAndStage();
+      });
+
+      el.selectClipLimit.addEventListener('change', (e) => {
+        state.clipLimit = e.target.value;
+      });
+
+      el.aspectBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.aspectRatio = btn.getAttribute('data-aspect');
+          el.aspectBtns.forEach((b) => {
+            const active = b === btn;
+            b.className = active
+              ? 'aspect-btn py-1 rounded-md text-xs font-medium bg-surface text-amber-300 border border-hairlineHover transition-all cursor-pointer'
+              : 'aspect-btn py-1 rounded-md text-xs font-medium text-gray-400 hover:text-gray-200 border border-transparent transition-all cursor-pointer';
+          });
+          updatePresetAndStage();
+        });
+      });
+
+      el.toggleCaptions.addEventListener('change', (e) => {
+        state.captionsEnabled = e.target.checked;
+        updatePresetAndStage();
+      });
+
+      el.toggleHook.addEventListener('change', (e) => {
+        state.hookEnabled = e.target.checked;
+        updatePresetAndStage();
+        if (state.hookEnabled) replayMotionPreview();
+      });
+
+      el.toggleDeadAir.addEventListener('change', (e) => {
+        state.deadairEnabled = e.target.checked;
+      });
+
+      el.toggleBleep.addEventListener('change', (e) => {
+        state.bleepEnabled = e.target.checked;
+      });
+
+      // Model card selection
+      el.modelCards.forEach((card) => {
+        card.addEventListener('click', () => {
+          state.aiModel = card.getAttribute('data-model');
+          el.modelCards.forEach((c) => {
+            c.classList.remove('selected');
+            c.classList.remove('bg-amber-500/10', 'border-amber-500/50');
+            c.classList.add('bg-obsidian', 'border-hairline');
+          });
+          card.classList.add('selected');
+          card.classList.remove('bg-obsidian', 'border-hairline');
+          card.classList.add('bg-amber-500/10', 'border-amber-500/50');
+        });
+      });
+
+      // Hook position buttons
+      el.hookPosBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.hookPosition = btn.getAttribute('data-hookpos');
+          updateHookPosition();
+        });
+      });
+
+      el.selectCaptionAnim.addEventListener('change', (e) => {
+        state.animStyle = e.target.value;
+        updatePresetAndStage();
+        renderCaptionFrame();
+      });
+
+      el.selectCaptionFont.addEventListener('change', (e) => {
+        state.font = e.target.value;
+        updatePresetAndStage();
+      });
+
+      el.selectCaptionPos.addEventListener('change', (e) => {
+        state.captionPos = e.target.value;
+        updatePresetAndStage();
+      });
+
+      el.swatchBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.accentColor = btn.getAttribute('data-color');
+          state.brandColorName = btn.getAttribute('data-name');
+          el.swatchHexLabel.textContent = state.accentColor;
+          el.swatchBtns.forEach((b) => {
+            const isSelected = b === btn;
+            b.classList.toggle('ring-2', isSelected);
+            b.classList.toggle('ring-offset-2', isSelected);
+            b.classList.toggle('ring-offset-obsidian', isSelected);
+            b.classList.toggle('ring-amber-300', isSelected);
+            b.classList.toggle('scale-105', isSelected);
+            b.classList.toggle('opacity-75', !isSelected);
+          });
+          renderCaptionFrame();
+        });
+      });
+
+      el.btnReplayMotion.addEventListener('click', replayMotionPreview);
+
+      // Start Job
+      el.btnMakeClips.addEventListener('click', () => {
+        const src = el.videoInput.value.trim();
+        if (!src) {
+          showToast('Please enter a video URL or pick a local file', 'warning');
+          return;
+        }
+
+        state.isRunning = true;
+        state.currentStep = 1;
+        state.stepPercent = 5;
+        state.overallPercent = 2;
+        state.logs = [];
+        renderPipelineUI();
+        appendLog('INFO', `Starting Auto Clipper v2.0 • Model: ${state.aiModel}`);
+
+        const opts = {
+          src: src,
+          kind: state.niche,
+          layout: state.framing,
+          ratio: state.aspectRatio,
+          cam_pos: el.selectFacecam.value,
+          model: state.aiModel,
+          captions: state.captionsEnabled,
+          hook: state.hookEnabled,
+          censor: state.bleepEnabled,
+          music: false,
+          edit: state.deadairEnabled,
+          focus: el.inputFocusTopic.value.trim(),
+          cookies: el.selectCookies.value,
+          live: parseInt(el.selectBuffer.value, 10) || 0,
+          brand_color: state.brandColorName,
+          caption_style: state.animStyle,
+          caption_template: state.animStyle,
+          layout_mode: state.framing,
+          top_clips: state.clipLimit,
+          font: state.font,
+          platform: state.platform,
+          hook_position: state.hookPosition,
+        };
+
+        if (window.pywebview && window.pywebview.api) {
+          window.pywebview.api.start_clipping(opts);
+        } else {
+          showToast('Connected to AutoClipper Engine (Local Mode)', 'success');
+        }
+      });
+
+      // Stop Job
+      el.btnStopClips.addEventListener('click', () => {
+        if (window.pywebview && window.pywebview.api) {
+          window.pywebview.api.stop_clipping();
+        }
+        appendLog('WARN', 'Cancel signal sent to pipeline.');
+      });
+
+      // Copy Logs
+      el.btnCopyLogs.addEventListener('click', () => {
+        const raw = state.logs.map((l) => `[${l.tag}] ${l.text}`).join('\n');
+        copyTextToClipboard(raw, 'Telemetry logs copied to clipboard');
+      });
+
+      // Output Folder
+      el.btnOutputFolder.addEventListener('click', () => {
+        if (window.pywebview && window.pywebview.api) {
+          window.pywebview.api.open_output_folder();
+        }
+      });
+
+      // Results Modal
+      el.btnResultsStudio.addEventListener('click', () => {
+        if (window.pywebview && window.pywebview.api) {
+          window.pywebview.api.get_latest_results().then((results) => {
+            if (results && results.length) {
+              state.clips = results;
+            }
+            renderResultsStudio();
+            el.resultsModalBackdrop.classList.remove('hidden');
+          });
+        } else {
+          renderResultsStudio();
+          el.resultsModalBackdrop.classList.remove('hidden');
+        }
+      });
+
+      el.btnCloseResults.addEventListener('click', () => {
+        el.resultsModalBackdrop.classList.add('hidden');
+      });
+
+      el.resultsModalBackdrop.addEventListener('click', (e) => {
+        if (e.target === el.resultsModalBackdrop) {
+          el.resultsModalBackdrop.classList.add('hidden');
+        }
+      });
+
+      el.btnExportAll.addEventListener('click', () => {
+        if (window.pywebview && window.pywebview.api) {
+          window.pywebview.api.open_output_folder();
+        }
+      });
+
+      // Init
+      updatePresetAndStage();
+      renderPipelineUI();
+      appendLog('INFO', 'Auto Clipper v2.0 Studio Workstation Initialized.');
+      startCaptionLoop();
+    })();
+  </script>
+</body>
+</html>

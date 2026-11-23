@@ -1,0 +1,15 @@
+yt-dlp[default]
+deno
+numpy
+librosa
+soundfile
+faster-whisper
+opencv-python
+requests
+pillow
+pywebview
+mediapipe==0.10.14
+scenedetect
+playwright
+pycaps @ https://github.com/francozanardi/pycaps/archive/refs/heads/main.zip
+pyinstaller

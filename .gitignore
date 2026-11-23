@@ -1,0 +1,37 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.spec
+
+# Virtual Environment
+venv/
+env/
+.venv/
+
+# PyInstaller Build & Dist folders
+build/
+dist/
+
+# Large binaries & installer tools (prevent exceeding GitHub's 100MB file limit)
+tools/
+*.exe
+*.zip
+*.tar.gz
+*.7z
+
+# Video outputs & working scratch files
+output/
+work/
+job_*
+
+# Model weights (downloaded automatically at runtime)
+models/*.onnx
+models/whisper-*
+.installed
+
+# Logs & temp files
+error_log.txt
+*.log
+.DS_Store
+Thumbs.db
